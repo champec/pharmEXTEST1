@@ -1,24 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { PharmacyAuthScreen, UserAuthScreen, Dashboard } from './screen';
+import { useEffect, useState } from 'react';
+import { OrganisationProvider, UsersProvider } from './Context';
+import { supabasePharmacyClient, supabaseUserClient } from './supabase/auth';
 
 function App() {
+const [pharmacySession, setPharmacySession] = useState()
+const [userSession, setUserSession] = useState()
+
+console.log("PHARMACY", pharmacySession, "USER", userSession)
   return (
-    <div className="App">
+    <OrganisationProvider setPharmacySession={setPharmacySession}>
+      <UsersProvider setUserSession={setUserSession}>
+       <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+       { pharmacySession && !userSession ? <UserAuthScreen /> : userSession && pharmacySession ? <Dashboard /> : <PharmacyAuthScreen />}
       </header>
     </div>
+    </UsersProvider>
+    </OrganisationProvider>
   );
 }
 
